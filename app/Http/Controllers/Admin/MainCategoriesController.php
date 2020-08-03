@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\MainCategoryRequest;
 use App\Models\MainCategory;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class MainCategoriesController extends Controller
 {
@@ -109,6 +110,46 @@ class MainCategoriesController extends Controller
 
             return redirect()->route('admin.maincategories')->with(['success' => 'تم تحديث القسم بنجاح.']);
 
+        } catch (\Exception $exception) {
+            return redirect()->route('admin.maincategories')->with(['error' => 'حدث خطأ ما يرجى المحاولة فيما بعد .']);
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $main_category = MainCategory::find($id);
+            if (!$main_category) {
+                return redirect()->route('admin.maincategories')->with(['error' => 'هذا القسم غير موجود .']);
+            }
+            $vendors = $main_category->vendors();
+            if (isset($vendors) && $vendors->count() > 0) {
+                return redirect()->route('admin.maincategories')->with(['error' => 'لا يمكن حذف هذا القسم .']);
+            }
+            $image = Str::after($main_category->photo, 'assets/');
+            $image = base_path('assets/' . $image);
+            unlink($image);
+            $main_category->categories()->delete();
+            $main_category->delete();
+            return redirect()->route('admin.maincategories')->with(['success' => 'تم حذف القسم بنجاح.']);
+        } catch (\Exception $exception) {
+            return redirect()->route('admin.maincategories')->with(['error' => 'حدث خطأ ما يرجى المحاولة فيما بعد .']);
+        }
+    }
+
+    public function changeStatus($id)
+    {
+        try {
+            $main_category = MainCategory::find($id);
+            if (!$main_category) {
+                return redirect()->route('admin.maincategories')->with(['error' => 'هذا القسم غير موجود .']);
+            }
+            $status = $main_category->active == 0 ? 1 : 0;
+            $main_category->update(['active' => $status]);
+            if ($status == 0)
+                return redirect()->route('admin.maincategories')->with(['success' => 'تم إلغاء تفعيل القسم بنجاح .']);
+            else
+                return redirect()->route('admin.maincategories')->with(['success' => 'تم تفعيل القسم بنجاح .']);
         } catch (\Exception $exception) {
             return redirect()->route('admin.maincategories')->with(['error' => 'حدث خطأ ما يرجى المحاولة فيما بعد .']);
         }

@@ -1,17 +1,17 @@
 @extends('layouts.admin')
-@section('title','الأقسام الرئيسية');
+@section('title','المتاجر');
 @section('content')
     <div class="app-content content">
         <div class="content-wrapper">
             <div class="content-header row">
                 <div class="content-header-left col-md-6 col-12 mb-2">
-                    <h3 class="content-header-title"> الأقسام الرئيسية </h3>
+                    <h3 class="content-header-title"> المتاجر </h3>
                     <div class="row breadcrumbs-top">
                         <div class="breadcrumb-wrapper col-12">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="">الرئيسية</a>
                                 </li>
-                                <li class="breadcrumb-item active"> الأقسام الرئيسية
+                                <li class="breadcrumb-item active"> المتاجر
                                 </li>
                             </ol>
                         </div>
@@ -25,7 +25,7 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h4 class="card-title">جميع الأقسام الرئيسية </h4>
+                                    <h4 class="card-title">جميع المتاجر </h4>
                                     <a class="heading-elements-toggle"><i
                                             class="la la-ellipsis-v font-medium-3"></i></a>
                                     <div class="heading-elements">
@@ -47,37 +47,39 @@
                                             class="table display nowrap table-striped table-bordered scroll-horizontal">
                                             <thead>
                                             <tr>
-                                                <th>القسم</th>
-                                                <th>اللغة</th>
-                                                <th>الحالة</th>
+                                                <th>الإسم</th>
                                                 <th>الصورة</th>
+                                                <th>الهاتف</th>
+                                                <th>القسم الرئيسي</th>
+                                                <th>الحالة</th>
                                                 <th>الإجراءات</th>
                                             </tr>
                                             </thead>
                                             <tbody>
 
 
-                                            @isset($categories)
-                                                @foreach($categories as $category)
+                                            @isset($vendors)
+                                                @foreach($vendors as $vendor)
                                                     <tr>
-                                                        <td>{{$category -> name}}</td>
-                                                        <td>{{get_default_language()}}</td>
-                                                        <td>{{$category -> getActive()}}</td>
+                                                        <td>{{$vendor -> name}}</td>
                                                         <td><img style="width: 100px;height: 100px;"
-                                                                 src="{{$category -> photo}}"></td>
+                                                                 src="{{$vendor -> logo}}" alt="صورة المتجر"></td>
+                                                        <td>{{$vendor -> mobile}}</td>
+                                                        <td>{{$vendor -> category -> name}}</td>
+                                                        <td>{{$vendor -> getActive()}}</td>
                                                         <td>
                                                             <div class="btn-group" role="group"
                                                                  aria-label="Basic example">
-                                                                <a href="{{route('admin.maincategories.edit',$category -> id)}}"
+                                                                <a href="{{route('admin.vendors.edit',$vendor -> id)}}"
                                                                    class="btn btn-outline-primary btn-min-width box-shadow-3 mr-1 mb-1">تعديل</a>
-                                                                <a href="{{route('admin.maincategories.delete',$category -> id)}}"
+                                                                <a href="{{route('admin.vendors.delete',$vendor -> id)}}"
                                                                    class="btn btn-outline-danger btn-min-width box-shadow-3 mr-1 mb-1">
                                                                     حذف
                                                                 </a>
 
-                                                                <a href="{{route('admin.maincategories.status',$category -> id)}}"
+                                                                <a href="{{route('admin.vendors.status',$vendor -> id)}}"
                                                                    class="btn btn-outline-warning btn-min-width box-shadow-3 mr-1 mb-1">
-                                                                    @if($category -> active == 1) إلغاء التفعيل
+                                                                    @if($vendor -> active == 1) إلغاء التفعيل
                                                                     @else
                                                                         تفعيل
                                                                     @endif
